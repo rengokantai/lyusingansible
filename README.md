@@ -1,7 +1,7 @@
 #### lyusingansible
- - User Privilege Escalation Changes
+- User Privilege Escalation Changes
  (old syntax: user:test sudo:yes)
- ```
+```
  - hosts: apache
    remote_user: test
    become: yes
@@ -11,20 +11,20 @@
    tasks:
      name: 
      yum: name=telnet state=absent
- ```
+```
  
- - Modules: The 'Find' Module
- ```
+- Modules: The 'Find' Module
+
+```
  tasks:
  - name:
    find: paths="/etc" patterns="*.txt,*.log" recurse=yes (no by default)
    register: result
  - debug: var=result
  
- ```
- 
- - Ansible 2.0 - Roles: User Privilege Escalation Changes
- ```
+```
+- Ansible 2.0 - Roles: User Privilege Escalation Changes
+```
  - hosts:
    remote_user:
    become:
@@ -39,8 +39,6 @@
    post_tasks:
    - name:
      raw:
-     
-     
 ```
 - Ansible 2.0 - Roles: The 'Find' Module
 ```
