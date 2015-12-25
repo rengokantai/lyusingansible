@@ -1,4 +1,34 @@
 #### lyusingansible
+- The 'Command' Module
+```
+- name:
+  command: /home/test/testing/test.sh
+  args:
+    chdir: /home/test/testing
+```
+- The 'Cron' Module
+```
+- name
+  cron: name="list files" minute="0" hour="1" job="ls =al > /home/test/result.log"
+```
+- The 'Fetch' Module
+```
+- name: Copy remote hosts file to control server
+  fetch:src=/etc/hosts dest=/home/test
+  
+```
+
+- The 'User' Module
+Add a user.
+```
+- name:
+  user: name=newuser comment='comment' group='wheel'
+  user: name=newuser state=absent remove=yes //remove a user
+```
+- The 'AT' Module
+```
+
+```
 - User Privilege Escalation Changes
  (old syntax: user:test sudo:yes)
 ```
@@ -23,6 +53,7 @@
  - debug: var=result
  
 ```
+
 - Ansible 2.0 - Roles: User Privilege Escalation Changes
 ```
  - hosts:
