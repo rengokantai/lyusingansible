@@ -53,6 +53,12 @@ Add a user.
  - debug: var=result
  
 ```
+- The 'Apt' Module
+```
+- name: Equivalent to apt-get update
+  apt: update_cache=yes
+- name: Equivalent to apt-get upgrade
+  apt: upgrade=dist
 
 - Ansible 2.0 - Roles: User Privilege Escalation Changes
 ```
