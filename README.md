@@ -9,7 +9,7 @@
 - The 'Cron' Module
 ```
 - name
-  cron: name="list files" minute="0" hour="1" job="ls =al > /home/test/result.log"
+  cron: name="list files" minute="0" hour="1" job="ls -al > /home/test/result.log"
 ```
 - The 'Fetch' Module
 ```
@@ -59,6 +59,42 @@ Add a user.
   apt: update_cache=yes
 - name: Equivalent to apt-get upgrade
   apt: upgrade=dist
+```
+- The 'Copy' Module
+```
+action: copy src=/hostmachine/txt dest=clientmachine/txt owner=test group=txt mode=0777
+```
+-  The 'DNF' Module
+```
+name:
+dnf: name="*" state=latest
+//or
+dnf: name="@Development tools" state=latest
+```
+- The 'Apache2_Module' Module
+```
+apache2_module: state=absent name=alias
+```
+- The 'SetFact' Module
+```
+- name:
+  set_fact:
+    singlefact: SOME
+-debug: msg-{{playbook_version}}
+-debug: msg-{{singlefact}}
+```
+- The 'Stat' Module
+```
+- name:
+  stat: path=/xx
+    register: p
+- debug: msg='msg'
+    when: p.stat.isdir is defined and p.stat.isdir
+```
+- The 'Script' Module
+ - name
+   script: /path/to/xx.sh >> up.log
+```
 
 - Ansible 2.0 - Roles: User Privilege Escalation Changes
 ```
