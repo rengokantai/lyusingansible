@@ -92,6 +92,7 @@ apache2_module: state=absent name=alias
     when: p.stat.isdir is defined and p.stat.isdir
 ```
 - The 'Script' Module
+```
  - name
    script: /path/to/xx.sh >> up.log
 ```
