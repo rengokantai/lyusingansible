@@ -7,8 +7,6 @@ useradd test
 passwd test
 ```
 
-
-
 make new dict and set user group in all three machines
 ```
 mkdir playbook
@@ -176,6 +174,78 @@ ansible localhost -m setup -a 'filter=ansible_kernel'
 ansible localhost -m setup -a 'filter=ansible_memtotal_mb'
 ansible localhost -m setup -a 'filter=ansible_virt*'
 ```
+
+- Our First Playbook  
+review:
+```
+ansible all -s -m yum -a 'pkg=lynx state=installed update_cache=true'
+```
+convert to new.yml
+```
+- hosts: all
+  tasks:
+  - name: install
+    yum: pkg=lynx state=installed update_cache=true
+```
+
+- Variables: Inclusion Types
+
+first: naive way
+```
+- hosts: all
+  vars:
+    web_root: /var/www/html
+  tasks:
+  - name: install
+    yum: pkg=lynx state=installed update_cache=true
+```
+
+modified:
+```
+- hosts: all
+  vars_files:
+  - vars.yml
+  tasks:
+  - name: install
+    yum: pkg=lynx state=installed update_cache=true
+```
+vars.yml:
+```
+web_root: /var/www/html
+```
+
+- Target Section
+
+
+- Variable Section
+(vars_files) file must start with `---`
+vars.yml:
+```
+---
+apache_version: 2.6
+apache_version: mod_ssl
+```
+
+cbk.yml
+```
+---
+- hosts: web
+  usr: test
+  become :yes
+  become_method: sudo   (sudo: yes user:test)
+  remote_user: test  
+  connection: ssh
+  gather_facts: no
+  vars:
+    playbook_version:0.1
+  vars_files:
+    - a.yml
+    - b.yml
+  vars_prompt:
+    - name: prop_message
+      prompt: Prop Message
+```
+
 
 
 make new dir
