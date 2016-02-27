@@ -1,5 +1,5 @@
 #### lyusingansible
-- configure
+- Test Environment Setup
 prepare three machines:
 then add user `test` in all three machines,  
 ```
@@ -35,7 +35,7 @@ ssh <machine3ip>
 ssh-copy-id <machine3 name>
 ssh <machine3-name>
 ```
-
+- Download and Installation 
 install prep software in all three machines
 ```
 yum install epel-release
@@ -48,7 +48,7 @@ install ansible
 yum install ansible
 ```
 
-- config
+- Ansible Configuration File
 ```
 cd /etc/ansible
 ```
@@ -61,6 +61,11 @@ roles
 
 for ansible.cfg,  
 uncomment log_path=/var/log/ansible.log
+
+- Ansible Python Dependencies
+```
+sudo yum list installed | grep python
+```
 
 
 
