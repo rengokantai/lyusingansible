@@ -67,6 +67,64 @@ uncomment log_path=/var/log/ansible.log
 sudo yum list installed | grep python
 ```
 
+- The HOSTS File
+
+create our own hosts file
+
+```
+vim hosts
+```
+edit:
+```
+[local]
+localhost
+#localhost.localdomain
+#127.0.0.1
+
+[apache]
+compu.labserver.com (or inner ip)
+
+[appserver]
+```
+
+Remember,change`ansible.cfg` edit this line:
+```
+inventory= /etc/ansible/hosts
+```
+if hosts file path changes
+
+- Overriding the Default HOSTS File
+```
+ansible all --list-hosts
+```
+```
+ansible groupname -m ping
+```
+
+create a host file locally and override host file in `/etc/ansible/hosts`
+```
+ansible gpname -i hosts -m ping
+```
+
+- Overriding the Default System Ansible.Cfg File
+```
+sudo cp /etc/ansible/snaible.cfg .
+chown test:test ansible.cfg
+```
+```
+inventory= ./hosts
+```
+```
+export ANSIBLE_CONFIG=/custom/path
+set | grep ANSIBLE
+```
+
+- Overriding the Default Roles Path
+ in `/etc/ansible/hosts`
+```
+roles_path =role1:role2
+```
+
 
 
 make new dir
