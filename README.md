@@ -293,9 +293,9 @@ cbk.yml
   tasks:
     - name: install
       action: yum name=lynx state=installed
-      notify: restart
+      notify: Restart
   handlers:
-    - name: Restart
+    - name: Restart    #same as notify
       action: service name=httpd state=restarted
 ```
 
@@ -329,6 +329,38 @@ practice:
     raw: yum list installed > /home/test/install.log
   - name: log end time
     raw: /usr/bin/date > /home/test/end.log    #file save on target machine
+```
+
+- Optimizing Your Playbook
+```
+- hosts: web
+  user: test
+  sudo: yes
+  connection: ssh
+  gather_facts: no
+  tasks:
+  - name: log start time
+    command: /usr/bin/date
+    register: start_sp
+  - debug: var=start_sp
+  - name: install httpd
+    action: yum name=httpd state=installed
+    notify: start
+  - name: verify
+    command: systemctl status httpd
+    register: result
+  - debug: var=result
+  - name: log all packages
+    command: yum list installed    
+    register: all_install
+  - debug: var=all_install
+  - name: log end time
+    command: /usr/bin/date
+    register: end_sp
+  - debug: var=end_sp
+  - handlers:
+    - name: start
+      service: name=httpd state=restarted
 ```
 
 
