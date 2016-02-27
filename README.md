@@ -48,6 +48,19 @@ install ansible
 yum install ansible
 ```
 
+- config
+```
+cd /etc/ansible
+```
+three files:
+```
+ansible.cfg
+hosts
+roles
+```
+
+for ansible.cfg,  
+uncomment log_path=/var/log/ansible.log
 
 
 
