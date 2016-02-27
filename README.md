@@ -246,6 +246,90 @@ cbk.yml
       prompt: Prop Message
 ```
 
+- Task Section
+cbk.yml
+```
+---
+- hosts: web
+  usr: test
+  become :yes
+  become_method: sudo   (sudo: yes user:test)
+  remote_user: test  
+  connection: ssh
+  gather_facts: no
+  vars:
+    playbook_version:0.1
+  vars_files:
+    - a.yml
+    - b.yml
+  vars_prompt:
+    - name: prop_message
+      prompt: Prop Message
+  tasks:
+    - name: install
+      action: yum name=lynx state=installed
+    - name: Check
+      action: yum name=telnet state=absent
+```
+
+- Handler Section
+```
+---
+- hosts: web
+  usr: test
+  become :yes
+  become_method: sudo   (sudo: yes user:test)
+  remote_user: test  
+  connection: ssh
+  gather_facts: no
+  vars:
+    playbook_version:0.1
+  vars_files:
+    - a.yml
+    - b.yml
+  vars_prompt:
+    - name: prop_message
+      prompt: Prop Message
+  tasks:
+    - name: install
+      action: yum name=lynx state=installed
+      notify: restart
+  handlers:
+    - name: Restart
+      action: service name=httpd state=restarted
+```
+
+- Outlining Your Playbook
+- Create a Playbook from Our Outline
+
+ckeck syntax without run
+```
+ansible-playbook test.yml --check
+```
+
+practice:
+```
+- hosts: web
+  user: test
+  sudo: yes
+  connection: ssh
+  gather_facts: no
+  tasks:
+  - name: log start time
+    raw: /usr/bin/date > /home/test/start.log    #file save on target machine
+  - name: install httpd
+    action: yum name=httpd state=installed
+  - name: start
+    service: name=httpd state=restarted
+  - name: verify
+    command: systemctl status httpd
+    register: result
+  - debug: var=result
+  - name: log all packages
+    raw: yum list installed > /home/test/install.log
+  - name: log end time
+    raw: /usr/bin/date > /home/test/end.log    #file save on target machine
+```
 
 
 make new dir
