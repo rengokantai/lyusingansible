@@ -1,4 +1,57 @@
 #### lyusingansible
+- configure
+prepare three machines:
+then add user `test` in all three machines,  
+```
+useradd test 
+passwd test
+```
+
+
+
+make new dict and set user group in all three machines
+```
+mkdir playbook
+chown test:test playbook/
+```
+
+login as test user.  
+
+then generate ssh.
+```
+ssh-keygen
+```
+
+
+copy ssh form every machine to another two
+```
+ssh-copy-id <machine2 ip>
+ssh <machine2ip>
+ssh-copy-id <machine2 name>
+ssh <machine2-name>
+
+ssh-copy-id <machine3 ip>
+ssh <machine3ip>
+ssh-copy-id <machine3 name>
+ssh <machine3-name>
+```
+
+install prep software in all three machines
+```
+yum install epel-release
+yum update repolist
+sudo yum update
+```
+
+install ansible
+```
+yum install ansible
+```
+
+
+
+
+make new dir
 - The 'Command' Module
 ```
 - name:
