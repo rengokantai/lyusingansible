@@ -125,6 +125,57 @@ set | grep ANSIBLE
 roles_path =role1:role2
 ```
 
+- Configuring Your 'Ansible' Account
+enable nopasswd in all three machines:
+```
+visudo
+```
+add
+```
+test ALL=(ALL) NOPASSWD:ALL
+```
+and edit ansible.cfg,edit   
+```
+#ask_sudo_pass=True
+```
+```
+ssh-copy-id localhost.localdomain
+```
+
+====
+
+- Ansible Command Line
+```
+anible -s -m shell -a 'yum list installed | grep python'
+```
+
+- System Facts
+get facts
+```
+ansible localhost -s -m setup |more
+```
+
+get other machine's facts and save on local machine
+```
+ansible localhost -s -m setup --tree /localpath
+```
+
+filter (do not use grep)
+```
+ansible localhost -m setup -a 'filter=ansible_*'
+```
+
+- System Facts: Common Values for Playbooks  
+
+some example
+```
+ansible localhost -m setup -a 'filter=ansible_domain'
+ansible localhost -m setup -a 'filter=ansible_fqdn'
+ansible localhost -m setup -a 'filter=ansible_interfaces'
+ansible localhost -m setup -a 'filter=ansible_kernel'
+ansible localhost -m setup -a 'filter=ansible_memtotal_mb'
+ansible localhost -m setup -a 'filter=ansible_virt*'
+```
 
 
 make new dir
