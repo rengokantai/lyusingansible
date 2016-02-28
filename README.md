@@ -182,7 +182,7 @@ ansible all -s -m yum -a 'pkg=lynx state=installed update_cache=true'
 ```
 convert to new.yml
 ```
-- hosts: all
+- hosts: all  #ifmultiple hosts, use : to seperate
   tasks:
   - name: install
     yum: pkg=lynx state=installed update_cache=true
@@ -630,6 +630,62 @@ ansible-playbook test.yml --step
 ```
 
 
+- Passing Variables Into Playbooks at the Command Line
+```
+...for brevity
+ tasks:
+    - name: install {{var}}
+      yum: pkg=httpd state={{status}}
+      ignore_errors: yes #default no
+...for brevity
+```
+
+run command:
+```
+ansible-playbook test.yml --extra-vars "var=httpd status=latest"
+```
+
+- Using Jinja2 Templates
+test.j2
+```
+{{var1}}{{var2}}
+```
+
+```
+---
+- hosts: test
+  connection: ssh
+  user: test
+  sudo: yes
+  gather_facts: yes
+  vars:
+    var1: a
+    var2: b
+  tasks:
+    - name:Install
+      template: src=test.j2 dest=/home/test/test.conf owner=test group=test mode=750
+```
+file will be convert to ```a b``` , from server machine test.j2 to client machine test.conf
+
+- LocalAction
+run command on local machine
+```
+...for brevity
+ tasks:
+    - name: before install check connection
+      local_action: command ping -c 5 clientmachine
+...for brevity
+```
+
+- DelegateTo
+```
+...for brevity
+ tasks:
+    - name: install 
+      yum: ping -c 1 secondmachine > /home/x.txt  #this happens on one client machine,and ping another client machine
+      delegate_to: 127.0.0.1  # redirect to our server machine
+...for brevity
+```
 
 make new dir
 - The 'Command' Module
