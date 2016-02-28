@@ -686,8 +686,87 @@ run command on local machine
       delegate_to: 127.0.0.1  # redirect to our server machine
 ...for brevity
 ```
+==
 
-make new dir
+- The 'Setup' Module
+- The 'File' Module
+```
+ansible test -m file -a 'path=/etc'
+```
+```
+ansible test -s -m file -a 'path=/tmp/etc state=directory mode=0700 owner=root'
+```
+
+```
+ansible test -s -m command -a 'rm -rf /tmp/etc removes=/tmp/etc'
+```
+- The 'Pause' Module
+stop for confirmation. enter to continue or ctrl c to exit
+```
+...for brevity
+ tasks:
+    - name: install 
+      yum: pkg=httpd state=latest
+    - name: pausing
+      pause:
+        prompt: "message...."
+...for brevity
+```
+- The 'WaitFor' Module
+```
+...for brevity
+ tasks:
+    - name: install 
+      yum: pkg=httpd state=latest
+    - name: wait 8080 port to open
+      wait_for:
+        port: 8080
+        state: started
+...for brevity
+```
+in client machine, run
+```
+sudo systemctl start tomcat
+```
+then playbook will continue to run.
+
+- The 'Yum' Module  
+Note: name is alias of pkg
+```
+...for brevity
+ tasks:
+    - name: install 
+      yum: name=httpd state=latest
+...for brevity
+```
+- The 'Apt' Module
+```
+...for brevity
+ tasks:
+    - name: equi to apt-get update
+      apt: update_cache=yes
+    - name: equi to apt-get upgrade
+      apt: upgrade=dist
+...for brevity
+```
+- The 'Service' Module
+```
+...for brevity
+ tasks:
+    - name: install 
+      yum: name=httpd state=latest
+    - name: install service
+      service: name=httpd state=enabled
+...for brevity
+```
+- The 'Copy' Module
+```
+...for brevity
+ tasks:
+    - name: copy
+      copy: src=/path/1.txt dest=/path2/1,txt owner=test group=test mode=0644 backup=yes # incase of file already exists
+...for brevity
+```
 - The 'Command' Module
 ```
 - name:
@@ -699,6 +778,19 @@ make new dir
 ```
 - name
   cron: name="list files" minute="0" hour="1" job="ls -al > /home/test/result.log"
+```
+
+remove this cronjob:
+```
+- name
+  cron: name="list files" state=absent
+```
+- The 'Debug' Module
+output useful json format message
+```
+    - name: install 
+      yum: name=httpd state=latest
+      debug: msg="message"
 ```
 - The 'Fetch' Module
 ```
