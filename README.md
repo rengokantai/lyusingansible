@@ -939,6 +939,63 @@ add a group
 - name:
   mount: name=/mnt/data src=/dev/xvdf1 fstype=ext3 opts=rw state=present
 ```
+- The 'Notify' Module
+- The 'AptRepo' Module
+```
+- name:
+  apt_repository: repo='deb http://dl.google.com/inuxdeb/stable main' state=present
+```
+- The 'AptKey' Module
+```
+- name:
+  apt_repository: url=https://dl-ssl.google.com/linux_signing_key.pub state=present
+```
+- The 'ACL' Module
+```
+- name:get acl
+  acl: name=/etc/test.acl.txt
+```
+- The 'Git' Module
+```
+- name:checking out git repo
+  git: repo=ssh://rengokantai@ly.git dest=/home/repo 
+```
+- Creating a Jinja2 Template File  
+- The 'Template' Module  
+see line 666.
+- The 'MySQL_DB' Module
+```
+- name: install python mysql
+  yum: pkg=MySQL-python state=latest
+  name:create db
+  mysql_db: name=testdb state=present login_user=root login_password=password
+```
+
+dump:
+```
+  mysql_db: name=testdb state=dump target=/var/dump.sql login_user=root login_password=password
+```
+- The 'MySQL_User' Module
+```
+- name: create mysql user
+  yum: name=user1 password=password1 priv=dbname.tablename:ALL state=present login_user=root login_password=password
+```
+- The 'Kernel_Blacklist' Module  
+block some modules
+```
+- name: block module
+  kernel_blacklist: name=dummy state=present
+```
+check in client machine:  
+check modprobe.d  
+```
+cat blacklist-ansible.conf
+```
+remove module from linux kernel:
+```
+sudo modprobe -r dumm
+```
+==
 - Ansible 2.0 - Roles: User Privilege Escalation Changes
 ```
  - hosts:
