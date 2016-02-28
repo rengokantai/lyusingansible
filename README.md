@@ -996,6 +996,94 @@ remove module from linux kernel:
 sudo modprobe -r dumm
 ```
 ==
+- Roles - The Directory Structure  
+from playbook/  
+```
+mkdir roles
+cd roles
+```
+
+then we create some subcommands:
+```
+mkdir common
+mkdir webserver
+....
+```
+
+in any of subfolders, create some vars, for example
+```
+cd common
+mkdir files
+mkdir tasks
+mkdir templates
+mkdir handlers
+mkdir meta
+mkdir defaults
+mkdir vars
+```
+- Role Based Tasks
+create `main.yml` in each folder
+
+create a master playbook: (first)
+```
+---
+- hosts: apache
+  user: test
+  sudo: yes
+  connection: ssh
+  roles:
+    - webserver
+```
+- Task Order - Pre and Post Tasks
+```
+---
+- hosts: apache
+  user: test
+  sudo: yes
+  connection: ssh
+  pre_tasks:
+  - name: name
+    raw: date > x.log
+  roles:
+    - webserver
+  post_tasks:
+  - name: name
+    raw: date > x.log
+```  
+- Roles - Conditional Execution  
+see line 513-518
+- Roles - Variable Substitution
+see line 239
+- Roles - Handlers
+see line 297
+- Roles - Using Notification
+- Roles - Configuring Alternate Roles Paths  
+open ansible.cfg,uncomment and change
+```
+#role_path=/etc/ansible/roles
+```
+- Roles - Conditional Include Statements  
+Must memorize this syntax  
+```
+---
+- hosts: apache
+  user: test
+  sudo: yes
+  connection: ssh
+  pre_tasks:
+  - name: name
+    raw: date > x.log
+  roles:
+    - {role: redhat, when: ansible_os_family=="RedHat"}
+    - {role: debian, when: ansible_os_family=="Debiant"}
+  post_tasks:
+  - name: name
+    raw: date > x.log
+```  
+- Roles - Waiting For Events
+see line 722
+- Roles - Executing a Task Until
+see line 529
 - Ansible 2.0 - Roles: User Privilege Escalation Changes
 ```
  - hosts:
