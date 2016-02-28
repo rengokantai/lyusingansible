@@ -364,6 +364,97 @@ practice:
 ```
 
 
+- Taking Our Playbook for a Dry Run
+Review:
+```
+ansible-playbook test.yml --check
+```
+
+- Asychronous Polling
+(run in parallel)
+```
+---
+- hosts: web
+  usr: test
+  become :yes
+  become_method: sudo   (sudo: yes user:test)
+  remote_user: test  
+  connection: ssh
+  gather_facts: no
+  vars:
+    playbook_version:0.1
+  vars_files:
+    - a.yml
+    - b.yml
+  vars_prompt:
+    - name: prop_message
+      prompt: Prop Message
+  tasks:
+    - name: install
+      action: yum name=lynx state=installed
+      notify: Restart
+      async: 300  # max time wait to complete this command.(mills)
+      poll: 3 # how often check this command has been completed. Every 3 second check it.
+  handlers:
+    - name: Restart    #same as notify
+      action: service name=httpd state=restarted
+```
+
+- Simple Variable Substitution
+a.yml
+```
+---
+apache_version: 2.6
+apache_version: mod_ssl
+pkg_lynx: lynx
+```
+
+
+```
+---
+- hosts: web
+  usr: test
+  become :yes
+  become_method: sudo   (sudo: yes user:test)
+  remote_user: test  
+  connection: ssh
+  gather_facts: no
+  vars:
+    playbook_version:0.1
+  vars_files:
+    - a.yml
+    - b.yml
+  vars_prompt:
+    - name: prop_message
+      prompt: Prop Message
+  tasks:
+    - name: install
+      action: yum name=lynx state=installed
+      notify: Restart
+    - name: install lynx
+      action: yum name={{pkg_lynx}} state=installed
+    - name: install package
+      action: yum name={{prop_message}} state=installed  # install package when prompt
+  handlers:
+    - name: Restart    #same as notify
+      action: service name=httpd state=restarted
+```
+
+- Lookups
+```
+---
+- hosts: web
+  usr: test
+  become :yes
+  become_method: sudo   (sudo: yes user:test)
+  remote_user: test  
+  connection: ssh
+  gather_facts: no
+  tasks:
+    - debug: msg="start opening {{lookup('csvfile','line1head file=look.csv delimiter=, default=NOMATCH') }}"
+    - debug: msg="{{ lookup('env','HOME'}}"
+
+
 make new dir
 - The 'Command' Module
 ```
