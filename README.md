@@ -1084,6 +1084,52 @@ Must memorize this syntax
 see line 722
 - Roles - Executing a Task Until
 see line 529
+- Roles - Using Tags
+```
+ansible-playbook test.yml --tags "tagname" --limit "hosts"    #--limit override hosts
+```
+- Roles - Breaking a Playbook Into a Role
+- Roles - Passing Variables from Command Line
+see line 645
+- Roles - Using Jinja2 Templates
+- Roles - DelegateTo
+see line 686
+- Roles - LocalAction
+see line 676
+==
+
+- Ansible Command Line - Installing Packages
+```
+ansible -u test -s -m yum -a "pkg=httpd state=latest"
+```
+- Ansible Command Line - Services and Hosts
+```
+ansible -u test -s -m service -a "name=httpd state=restarted"
+```
+- Ansible Command Line - Commands and Shells
+```
+ansible -u test -s -m command -a "ls -al"
+```
+- Ansible Command Line - Managing Users
+```
+ansible -u test -s -m user -a "name=testuser uid=1001 shell=/bin/bash"
+```
+- Ansible Command Line - Create and Manage Cron Jobs
+```
+ansible -u test -s -m cron -a "name='crontest' minute='0' hour='12' job='ls= al'"
+```
+
+```
+ansible -u test -s -m cron -a "name='crontest' state='absent'"
+```
+- Ansible Command Line - Running Arbitrary Commands
+```
+ansible -u test -s -a "ls -al"
+```
+- Ansible Command Line - Output Tree
+```
+ansible -u test -s -m yum -a "pkg=httpd state=latest" -t dir  # -t: create a dir 
+```
 - Ansible 2.0 - Roles: User Privilege Escalation Changes
 ```
  - hosts:
