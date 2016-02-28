@@ -871,7 +871,74 @@ apache2_module: state=absent name=alias
      chdir: logs/
      creates: uptime.log     #create uptime.log in logs/, create uptime.log only if not exists
 ```
+- The 'SELinux' Module  
+permissive, enforcing, disabled
+```
+tasks:
+  - name: change
+    selinux: state=disabled
+```
+- The 'SEBoolean' Module
+```
+- name: ..
+  seboolean: name=httpd_anon_write state=yes
+```
 
+- The 'Raw' Module
+- The 'Ping' Module
+```
+- name: ..
+  ping:
+```
+- The 'Package' Module  
+ Generic OS package manager  
+```
+- name: ..
+  package: name=telnet state=latest
+```
+- The 'Unarchive' Module
+```
+- name: ..
+  unarchive: src=test.tar.gz dest=/home/unarchive
+```
+- The 'HTPasswd' Module  
+add a user
+```
+- name:
+  htpasswd: path=/etc/apache2/.htpasswd name=test password=password owner=test group=test mode=0644
+```
+- The 'GetURL' Module  
+Download stuff
+```
+- name:
+  get_url: url=http://... dest=/ owner=test group=test mode=0644
+```
+- The 'Group' Module
+add a group
+```
+- name:
+  group: name=newgroup state=present/absent
+```
+- The 'Mail' Module
+```
+- name:
+  mail:
+    host='localhost'
+    port=25
+    to="a@b.com
+    subject="sub"
+    body='{{ansible_hostname}}'
+```
+- The 'Filesystem' Module
+```
+- name:
+  filesystem: fstype=ext3 dev=/dev/xvdf1 opts="-cc"
+```
+- The 'Mount' Module
+```
+- name:
+  mount: name=/mnt/data src=/dev/xvdf1 fstype=ext3 opts=rw state=present
+```
 - Ansible 2.0 - Roles: User Privilege Escalation Changes
 ```
  - hosts:
