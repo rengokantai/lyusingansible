@@ -453,6 +453,70 @@ pkg_lynx: lynx
   tasks:
     - debug: msg="start opening {{lookup('csvfile','line1head file=look.csv delimiter=, default=NOMATCH') }}"
     - debug: msg="{{ lookup('env','HOME'}}"
+```
+
+- RunOnce
+in a group of machines, only run on first machine.
+```
+.....for brevity
+- name: install
+      action: yum name=lynx state=installed
+      notify: Restart
+      run_once: true   #not yes
+```
+
+- Local Actions
+
+run playbook only in local:
+```
+ansible-playbook test.yml --connection=local  (event connection=ssh)
+```
+
+```
+- hosts: 127.0.0.1
+  connection: local
+  ...omit for brevity
+```
+
+- Loops
+
+this playbook will create 2 users on each machine
+```
+---
+- hosts: web
+  usr: test
+  become :yes
+  become_method: sudo   (sudo: yes user:test)
+  remote_user: test  
+  connection: ssh
+  gather_facts: no
+  tasks:
+    - name: list of users
+      user: name= {{item}} state=present
+      with_items:
+        - user1
+        - user2
+```
+
+- Conditionals
+```
+---
+- hosts: web
+  usr: test
+  become :yes
+  become_method: sudo   (sudo: yes user:test)
+  remote_user: test  
+  connection: ssh
+  gather_facts: no
+  .... for brevity
+  tasks:
+    - name: install on debian
+      command: apt-get -y install apache2
+      when: ansible_os_family="Debian"
+    - name: install on redhat
+      command: yum -y install httpd
+      when: ansible_os_family="Redhat"
+
 
 
 make new dir
