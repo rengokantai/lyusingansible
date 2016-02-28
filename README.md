@@ -516,6 +516,118 @@ this playbook will create 2 users on each machine
     - name: install on redhat
       command: yum -y install httpd
       when: ansible_os_family="Redhat"
+```
+- Until
+```
+  .... for brevity
+  tasks:
+    - name: install httpd
+      yum: pkg=httpd state=latest
+    - name: verify
+      shell: systemctl status httpd
+      register: result
+      until: result.stdout.find("active (running)")!= -1
+      retries: 5
+      delay: 5
+    - debug: var=result
+```
+- Notify
+- Vault
+encrypt yaml file.
+```
+ansible-vault create file.yml
+```
+enter password.
+
+edit file:
+```
+ansible-vault edit file.yml
+```
+
+change password:
+```
+ansible-vault rekey file.yml
+```
+
+uncrypt
+```
+ansible-vault decrypt file.yml
+```
+
+- Prompt - Interactive Playbook
+```
+...for brevity
+  vars_prompt:
+    - name: prop_message
+      prompt: Prop Message
+      default: httpd #If no input
+      private: no  #user input will not be echoed
+      ... for brevity
+```
+
+- Basic Include Statements
+subtask.yml:
+```
+- name: ...
+  task: ...
+- name: ...
+  task: ...
+```
+
+main.yml:
+```
+...for brevity
+ tasks:
+    - include: subtask.yml
+    - name: install httpd
+      yum: pkg=httpd state=latest
+...for brevity
+```
+
+- Tags
+run specific task, or skip specific task
+
+test.yml
+```
+...for brevity
+ tasks:
+    - name: install httpd
+      yum: pkg=httpd state=latest
+      tags:
+        - a
+...for brevity
+```
+```
+ansible-playbook test.yml --tags "tagname"
+```
+
+```
+ansible-playbook test.yml --skip-tags "tagname"
+```
+
+note [There is a tag called 'always' that always run.](http://docs.ansible.com/ansible/playbooks_tags.html)
+
+- Basic Error Handling
+```
+...for brevity
+ tasks:
+    - name: install httpd
+      yum: pkg=httpd state=wrongcommand
+      ignore_errors: yes #default no
+...for brevity
+```
+
+- Includes - Breaking Your Playbook Into Discrete Plays
+
+- Starting At Task or Stepping Through All Tasks
+```
+ansible-playbook test.yml --start-at-task='taskname'
+```
+
+step each task and confirm.
+```
+ansible-playbook test.yml --step
+```
 
 
 
