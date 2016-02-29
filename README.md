@@ -1254,6 +1254,11 @@ ansible -u test -s -m yum -a "pkg=httpd state=latest" -t dir  # -t: create a dir
 
 - Creating a Database Server Deployment - Playbook Optimization
 - Creating a Database Server Deployment - Breaking Into Role(s)
+
+==
+
+- Ansible 2.0 - Installation  
+deprecated.
 - Ansible 2.0 - Roles: User Privilege Escalation Changes
 ```
  - hosts:
@@ -1270,10 +1275,6 @@ ansible -u test -s -m yum -a "pkg=httpd state=latest" -t dir  # -t: create a dir
    post_tasks:
    - name:
      raw:
-```
-- Ansible 2.0 - Roles: The 'Find' Module
-```
-find: paths='/var/log" age="1d" recurse="yes" size="100k" patterns="*.log"
 ```
 - User Privilege Escalation Changes
  (old syntax: user:test sudo:yes)
@@ -1297,4 +1298,17 @@ find: paths='/var/log" age="1d" recurse="yes" size="100k" patterns="*.log"
    find: paths="/etc" patterns="*.txt,*.log" recurse=yes (no by default)
    register: result
  - debug: var=result
- 
+```
+- Ansible 2.0 - Modules: The 'Package' Module
+uniform package name.
+```
+tasks:
+  - name:
+    package: name=telnet state=latest
+```
+
+- Ansible 2.0 - Roles: The 'Find' Module
+```
+find: paths='/var/log" age="1d" recurse="yes" size="100k" patterns="*.log"  # greater than 100k
+```
+- Ansible 2.0 - Roles: The 'Package' Module
