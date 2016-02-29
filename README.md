@@ -1130,6 +1130,52 @@ ansible -u test -s -a "ls -al"
 ```
 ansible -u test -s -m yum -a "pkg=httpd state=latest" -t dir  # -t: create a dir 
 ```
+- Creating a Web Server Deployment - Outline
+- Creating a Web Server Deployment - Playbook First Pass
+```
+---
+- hosts: apache
+  user: test
+  sudo: yes
+  connection: ssh
+  gather_facts: yes
+  vars: 
+    apache_pkg: httpd
+    dist: redhat
+    apache_version: 2.4
+    apache_dir: /var/www/test
+    apache_fqdn: y.me
+  tasks:
+    - name: install
+      yum: pkg=httpd state=latest
+    - name: create dict
+      file: path=/var/www/test state=directory mode=644
+    - name: copy apache config file
+      copy: src=files/httpd.conf.template dest=/etc/httpd/conf/httpd.conf owner=root group=root mode=644
+    - name: create vhost.d dict on the remote host
+      file: path=/etc/httpd/vhost.d state=directory mode=755
+    - name: copy and untar source file 
+      unarchive src=files/site.tar.gz dest=/var/www/sample
+    - name: copy default vhost
+      copy: src=files/default.conf.template dest=/etc/httpd/vhost.d/default.conf owner=root group=test mode=644
+    - name: start web server
+      service: name=httpd state=started
+    - name: test web server
+      shell: curl http://y.me
+      register: result
+    - name: display
+      debug: var=result
+```
+- Creating a Web Server Deployment - Playbook Optimization
+- Creating a Web Server Deployment - Breaking Into Role(s)
+- Creating an NFS Server Deployment - Outline
+- Creating an NFS Server Deployment - Playbook First Pass
+- Creating an NFS Server Deployment - Playbook Optimization
+- Creating an NFS Server Deployment - Breaking Into Role(s)
+- Creating a Database Server Deployment - Outline
+- Creating a Database Server Deployment - Playbook First Pass
+- Creating a Database Server Deployment - Playbook Optimization
+- Creating a Database Server Deployment - Breaking Into Role(s)
 - Ansible 2.0 - Roles: User Privilege Escalation Changes
 ```
  - hosts:
