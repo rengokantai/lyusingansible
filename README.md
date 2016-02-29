@@ -1170,10 +1170,88 @@ ansible -u test -s -m yum -a "pkg=httpd state=latest" -t dir  # -t: create a dir
 - Creating a Web Server Deployment - Breaking Into Role(s)
 - Creating an NFS Server Deployment - Outline
 - Creating an NFS Server Deployment - Playbook First Pass
+```
+---
+- hosts: apache
+  user: test
+  sudo: yes
+  connection: ssh
+  gather_facts: yes
+  vars: 
+    dist: RedHat
+    nfsutils_pkg: nfs-utils
+    nfslibs_pkg: nfs-utils-lib
+    nfsserver_service: nfs-server
+    nfslock_service: nfs-lock
+    nfsmap_service: nfs-idmap
+    rpcbind_service:rcpbind
+    export_path: /var/share
+  tasks:
+    - name: Install NFS server
+      yum:pkg=nfs-utils state=latest
+      del
+    - name: Install NFS server 
+      yum:pkg=nfs-utils-lib state=latest
+    - name: copy export file to remote server
+      copy: src=files/exports.template dest=/etc/exports owner=root group=root mode=644
+    - name: start RPC bind service
+      service: name=rpcbind state=started
+    - name:start NFS service
+      service: name=nfs-server state=started
+    - name: start file lock service
+      service: name=nfs-locl state=started
+    - name: start NFS map service
+      service: name=nfs-idmap state=started
+    - name: start NFS client and utilities
+      service: name=nfs-utils state=latest
+      delegate_to 127.0.0.1
+```
+    
+      
+
 - Creating an NFS Server Deployment - Playbook Optimization
 - Creating an NFS Server Deployment - Breaking Into Role(s)
 - Creating a Database Server Deployment - Outline
 - Creating a Database Server Deployment - Playbook First Pass
+```
+---
+- hosts: apache
+  user: test
+  sudo: yes
+  connection: ssh
+  gather_facts: yes
+  vars: 
+    dbserver_pkg:mariadb-server
+    dblieent_pkg: mariadb
+    dbinstalldir: /var/lib
+    dbinstance: dbtest
+    dbdist: RedHat
+    dbversion: 5.5
+  tasks:
+    - name: install
+      yum: pkg=mariadb-server state=latest
+    - name: install client
+      yum: pkg=mariadb state=latest
+    - start service
+      service: name=mariadb state=started
+    - pause: prompt="please run mysql_secure_installation"
+    - name: restart
+      service: name=mariadb state=retarted
+    - name: copy remote database
+      copy: src=files/mysql.sql dest=/var/lib/mysql.sql owner=root group=root mode=755
+    - name: import sql file
+      shell: mysql -u root -p password dbname < /var/lib/mysql.sql
+      register: result
+    - debug: var=result
+    - name: add cronjob
+      cron: name="dbbackup" minute="0" hour="0" job="mysqldump -u root -ppassword --databases dbname >mysql.sql"
+    - name: run quick sql
+      shell: mysql -u root -p password -e 'SHOW DATABASES;'
+      register: mysqlresult
+    - debug: var=mysqlresult
+```     
+      
+
 - Creating a Database Server Deployment - Playbook Optimization
 - Creating a Database Server Deployment - Breaking Into Role(s)
 - Ansible 2.0 - Roles: User Privilege Escalation Changes
